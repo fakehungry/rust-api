@@ -7,7 +7,7 @@ use actix_web::{
 };
 use rust_api::{
     configuration::{DatabaseSettings, Settings},
-    routes::health_check,
+    routes::{get_all_tasks, health_check},
 };
 use sqlx::{PgPool, postgres::PgPoolOptions};
 
@@ -37,6 +37,7 @@ async fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, anyhow::E
     let server = HttpServer::new(move || {
         App::new()
             .route("/health-check", web::get().to(health_check))
+            .route("/tasks", web::get().to(get_all_tasks))
             .app_data(db_pool.clone())
     })
     .listen(listener)?
