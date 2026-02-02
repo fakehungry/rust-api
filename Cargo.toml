@@ -12,3 +12,9 @@ name = "rust-api"
 
 [dependencies]
 actix-web = "4.12.1"
+anyhow = "1.0.100"
+secrecy = { version = "0.10.3", features = ["serde"] }
+serde = "1.0.228"
+serde-aux = "4.7.0"
+sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio-rustls"] }
+tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread"] }
