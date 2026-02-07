@@ -7,7 +7,7 @@ use actix_web::{
 };
 use rust_api::{
     configuration::{DatabaseSettings, Settings},
-    routes::{get_all_tasks, health_check},
+    routes::{create_task, delete_task, get_all_tasks, get_task_by_id, health_check, update_task},
 };
 use sqlx::{PgPool, postgres::PgPoolOptions};
 
@@ -38,6 +38,10 @@ async fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, anyhow::E
         App::new()
             .route("/health-check", web::get().to(health_check))
             .route("/tasks", web::get().to(get_all_tasks))
+            .route("/task", web::post().to(create_task))
+            // .route("/task/:id", web::get().to(get_task_by_id))
+            // .route("/task/:id", web::put().to(update_task))
+            // .route("/task/:id", web::delete().to(delete_task))
             .app_data(db_pool.clone())
     })
     .listen(listener)?
@@ -47,6 +51,10 @@ async fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, anyhow::E
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    unsafe {
+        std::env::set_var("RUST_LOG", "debug");
+    }
+    env_logger::init();
     let db_config = DatabaseSettings {
         username: "hean".to_string(),
         password: "heankub22".into(),

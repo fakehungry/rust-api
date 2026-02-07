@@ -1,16 +1,8 @@
 use actix_web::web;
-use serde::Serialize;
 use sqlx::PgPool;
 
+use crate::models::Task;
 use crate::utils::custom_response::{CustomResponseBuilder, Response};
-
-#[derive(Serialize)]
-pub struct Task {
-    id: i32,
-    title: String,
-    description: Option<String>,
-    priority: Option<String>,
-}
 
 // TODO: Separation of concerns: move DB logic to a separate module
 pub async fn get_all_tasks(pool: web::Data<PgPool>) -> Response<Vec<Task>> {
