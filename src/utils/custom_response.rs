@@ -7,7 +7,7 @@ use actix_web::{
     mime,
 };
 use bytes::{BufMut, BytesMut};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub type Response<T> = Result<CustomResponse<T>, Error>;
 
@@ -37,18 +37,20 @@ pub struct CustomResponseBuilder<T: Serialize> {
     pub pagination: Option<Pagination>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Pagination {
-    pub count: i64,
-    pub offset: i64,
-    pub limit: i32,
+    pub offset: Option<i32>,
+    pub limit: Option<i32>,
 }
 
 impl Pagination {
     fn add_headers(&self, response: &mut HttpResponseBuilder) {
-        response.append_header(("X-Pagination-Count", self.count.to_string()));
-        response.append_header(("X-Pagination-Offset", self.offset.to_string()));
-        response.append_header(("X-Pagination-Limit", self.limit.to_string()));
+        if let Some(offset) = self.offset {
+            response.append_header(("X-Pagination-Offset", offset.to_string()));
+        }
+        if let Some(limit) = self.limit {
+            response.append_header(("X-Pagination-Limit", limit.to_string()));
+        }
     }
 }
 

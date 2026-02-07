@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        UPDATE tasks\n        SET title = $1, description = $2, priority = $3\n        WHERE id = $4\n        RETURNING id, title, description, priority;\n        ",
+  "query": "\n        SELECT id, title, description, priority, COUNT(*) OVER() AS total_count\n        FROM tasks\n        ORDER BY id\n        LIMIT $1 OFFSET $2;\n        ",
   "describe": {
     "columns": [
       {
@@ -22,22 +22,26 @@
         "ordinal": 3,
         "name": "priority",
         "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "total_count",
+        "type_info": "Int8"
       }
     ],
     "parameters": {
       "Left": [
-        "Varchar",
-        "Text",
-        "Varchar",
-        "Int4"
+        "Int8",
+        "Int8"
       ]
     },
     "nullable": [
       false,
       false,
       true,
-      false
+      false,
+      null
     ]
   },
-  "hash": "7567f94792eaa76536323d67e0d89ef9266748293219b873aa2c065b24eb5b20"
+  "hash": "b0a2f84327185a6a7b9369da17b41df05d7e3799af11692ecd49249a4f2475a1"
 }
