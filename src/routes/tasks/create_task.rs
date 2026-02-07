@@ -2,22 +2,14 @@ use actix_web::{
     http::StatusCode,
     web::{self},
 };
-use serde::Deserialize;
 use sqlx::PgPool;
 
 use crate::{
-    models::Task,
+    models::{Task, TaskFormData},
     utils::{CustomResponseBuilder, Response},
 };
 
-#[derive(Deserialize)]
-pub struct FormData {
-    pub title: String,
-    pub description: Option<String>,
-    pub priority: Option<String>,
-}
-
-pub async fn create_task(pool: web::Data<PgPool>, form: web::Json<FormData>) -> Response<Task> {
+pub async fn create_task(pool: web::Data<PgPool>, form: web::Json<TaskFormData>) -> Response<Task> {
     let result = sqlx::query!(
         r#"
         INSERT INTO tasks (title, description, priority)

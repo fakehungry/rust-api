@@ -7,3 +7,10 @@ pub struct Task {
     pub description: Option<String>,
     pub priority: Option<String>,
 }
+
+#[derive(Deserialize)]
+pub struct TaskFormData {
+    pub title: String,
+    pub description: Option<String>,
+    pub priority: Option<String>,
+}

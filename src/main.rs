@@ -40,7 +40,7 @@ async fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, anyhow::E
             .route("/tasks", web::get().to(get_all_tasks))
             .route("/task", web::post().to(create_task))
             .route("/task/{id}", web::get().to(get_task_by_id))
-            // .route("/task/{id}", web::put().to(update_task))
+            .route("/task/{id}", web::put().to(update_task))
             // .route("/task/{id}", web::delete().to(delete_task))
             .app_data(db_pool.clone())
     })
