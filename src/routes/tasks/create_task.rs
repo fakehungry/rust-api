@@ -1,4 +1,7 @@
-use actix_web::web::{self};
+use actix_web::{
+    http::StatusCode,
+    web::{self},
+};
 use serde::Deserialize;
 use sqlx::PgPool;
 
@@ -15,7 +18,6 @@ pub struct FormData {
 }
 
 pub async fn create_task(pool: web::Data<PgPool>, form: web::Json<FormData>) -> Response<Task> {
-    println!("Creating task with title: {}", form.title);
     let result = sqlx::query!(
         r#"
         INSERT INTO tasks (title, description, priority)
@@ -37,7 +39,10 @@ pub async fn create_task(pool: web::Data<PgPool>, form: web::Json<FormData>) -> 
         priority: Some(result.priority),
     };
 
-    let response = CustomResponseBuilder::new().body(task).build();
+    let response = CustomResponseBuilder::new()
+        .body(task)
+        .status_code(StatusCode::CREATED)
+        .build();
 
     Ok(response)
 }
